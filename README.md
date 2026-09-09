@@ -35,7 +35,7 @@ Verdicts are presented as wayside signal aspects, because that is what they are.
 |--------|---------|-----------|
 | 🔴 **STOP** | Independent inspection required | CSX, Union Pacific, BNSF, CPKC |
 | 🟢 **CLEAR** | Railroad accepts its own inspection | Norfolk Southern\*, CN |
-| 🟡 **APPROACH** | Short line — confirm with the railroad | 600+ carriers |
+| 🟡 **APPROACH** | Short line — confirm with the railroad | 770+ carriers |
 | ⚫ **DARK** | No industrial track reaches the address | — |
 
 \* Norfolk Southern is flagged **policy under review**: the announced Union
