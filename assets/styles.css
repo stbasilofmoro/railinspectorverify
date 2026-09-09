@@ -417,3 +417,13 @@ footer a:hover { color: var(--a2); }
   #map { height: 320px; }
   .radius-readout { font-size: 18px; }
 }
+
+/* A degraded-source notice: the answer still stands, but say what was missing. */
+.fineprint.warn {
+  color: #FFDFA3;
+  border-left: 2px solid var(--approach);
+  padding-left: 13px;
+  background: rgba(255, 182, 31, .06);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding-top: 9px; padding-bottom: 9px; padding-right: 13px;
+}

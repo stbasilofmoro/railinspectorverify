@@ -39,6 +39,7 @@
   var FRA_URL = 'https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/' +
     'services/NTAD_North_American_Rail_Network_Lines/FeatureServer/0/query';
   var OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+  var OVERPASS_TIMEOUT_MS = 12000;
 
   /* FRA NET codes. Only I and O represent industrial track that actually
      serves a facility; M is mainline, A/R/X/T/Z are not usable freight rail. */
@@ -81,7 +82,8 @@
     trackLayer: null,
     circle: null,
     marker: null,
-    seq: 0
+    seq: 0,
+    osmOk: true
   };
 
   /* ---- Geometry ---------------------------------------------------------- */
@@ -240,12 +242,20 @@
       'way(around:' + radius + ',' + lat + ',' + lon + ')' +
       '["railway"~"^(rail|spur|siding|narrow_gauge)$"];out tags geom;';
 
+    /* Overpass is a free, heavily-loaded community service and regularly times
+       out or queues. It only corroborates what FRA already told us, so it gets
+       a hard deadline and never blocks the answer. */
+    var ctrl = new AbortController();
+    var killer = setTimeout(function () { ctrl.abort(); }, OVERPASS_TIMEOUT_MS);
+
     return fetch(OVERPASS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(q)
+      body: 'data=' + encodeURIComponent(q),
+      signal: ctrl.signal
     })
       .then(function (r) {
+        clearTimeout(killer);
         if (!r.ok) throw new Error('Overpass returned ' + r.status);
         return r.json();
       })
@@ -279,7 +289,12 @@
         });
         return rows;
       })
-      .catch(function (e) { console.warn('Overpass lookup failed:', e); return []; });
+      .catch(function (e) {
+        clearTimeout(killer);
+        state.osmOk = false;
+        console.warn('Overpass unavailable — FRA result still stands:', e.message);
+        return [];
+      });
   }
 
   /* ---- Step 3: classification -------------------------------------------- */
@@ -366,10 +381,18 @@
        polyline to a viewless map throws inside its renderer. Start on the
        continental US; drawMap moves it to the real point immediately. */
     state.map = L.map(mapEl, { scrollWheelZoom: false }).setView([39.83, -98.58], 4);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap contributors &copy; CARTO &middot; Track: FRA NARN',
-      subdomains: 'abcd',
-      maxZoom: 19
+    /* Esri's dark canvas is keyless. CARTO's basemaps now require an API key
+       and quietly serve tiles stamped "API KEY REQUIRED" when you call them
+       without one — the map still draws, it just looks broken. */
+    L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/' +
+      'Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Esri, HERE, Garmin, &copy; OpenStreetMap contributors &middot; Track: FRA NARN',
+      maxZoom: 19, maxNativeZoom: 16
+    }).addTo(state.map);
+    /* Street and place labels ride on a separate reference layer. */
+    L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/' +
+      'Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19, maxNativeZoom: 16, opacity: 0.85
     }).addTo(state.map);
     state.trackLayer = L.layerGroup().addTo(state.map);
 
@@ -520,10 +543,17 @@
       (result.carrier ? '<div class="panel"><p class="comp-label">Serving railroad</p>' +
         carrierBlock(result.carrier, result.basis) + '</div>' : '') +
       evidenceRows(result.evidence) +
+      (state.osmOk ? '' :
+        '<p class="fineprint warn">OpenStreetMap did not respond in time, so this ' +
+        'answer rests on FRA data alone. FRA is the authoritative source for ' +
+        'ownership and track class, so the verdict stands — but any spur that ' +
+        'exists only in OpenStreetMap would have been missed.</p>') +
       '<p class="fineprint">Located by ' + esc(place.source) + ' &middot; ' +
       place.lat.toFixed(5) + ', ' + place.lon.toFixed(5) + ' &middot; searched ' +
-      state.radius + ' m &middot; FRA National Rail Network and OpenStreetMap. ' +
-      'This is a screening tool — confirm with the railroad before acting.</p>';
+      state.radius + ' m &middot; ' +
+      (state.osmOk ? 'FRA National Rail Network and OpenStreetMap' :
+        'FRA National Rail Network') +
+      '. This is a screening tool — confirm with the railroad before acting.</p>';
 
     out.hidden = false;
     raffle.hidden = false;
@@ -555,6 +585,7 @@
     if (!state.place) return Promise.resolve();
     var place = state.place;
     var token = ++state.seq;
+    state.osmOk = true;
 
     mapWrap.hidden = false;
     out.hidden = false;
