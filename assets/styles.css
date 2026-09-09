@@ -307,3 +307,113 @@ footer a:hover { color: var(--a2); }
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+
+/* ============================================================================
+   Map and search-radius control
+   ------------------------------------------------------------------------- */
+
+#mapwrap { margin-top: 22px; padding: 26px; }
+
+.map-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap; margin-bottom: 18px;
+}
+.map-head .comp-label { margin-bottom: 8px; }
+.map-hint { font-size: 13.5px; color: var(--ink-2); line-height: 1.56; margin: 0; max-width: 62ch; }
+
+.radius-readout {
+  font-family: var(--mono); font-weight: 700; font-size: 21px; letter-spacing: -.01em;
+  color: var(--a2); text-shadow: 0 0 18px rgba(34, 211, 238, .55);
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+
+/* Range input, styled explicitly in both engines so it does not fall back
+   to a light-theme native control on a dark ground. */
+#radius {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 30px; background: transparent; cursor: pointer; display: block;
+}
+#radius::-webkit-slider-runnable-track {
+  height: 5px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--a2), var(--a1));
+  box-shadow: 0 0 16px rgba(34, 211, 238, .35);
+}
+#radius::-moz-range-track {
+  height: 5px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--a2), var(--a1));
+}
+#radius::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 20px; height: 20px; border-radius: 50%; margin-top: -7.5px;
+  background: radial-gradient(circle at 38% 34%, #fff, var(--a2) 58%, #0B7C93);
+  border: 0; box-shadow: 0 0 0 1px rgba(34, 211, 238, .6), 0 0 20px 4px rgba(34, 211, 238, .55);
+  transition: box-shadow .2s;
+}
+#radius::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%; border: 0;
+  background: radial-gradient(circle at 38% 34%, #fff, var(--a2) 58%, #0B7C93);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, .6), 0 0 20px 4px rgba(34, 211, 238, .55);
+}
+#radius:active::-webkit-slider-thumb { box-shadow: 0 0 0 1px rgba(34,211,238,.8), 0 0 28px 7px rgba(34,211,238,.75); }
+#radius:focus-visible { outline: 2px solid var(--a2); outline-offset: 6px; border-radius: 6px; }
+
+.radius-scale {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+  color: var(--ink-3); margin-top: -2px;
+}
+.radius-note { font-size: 12.5px; color: var(--ink-3); margin: 10px 0 18px; }
+
+#map {
+  height: 420px; border-radius: var(--r-md); overflow: hidden;
+  border: 1px solid var(--line-bright); background: #0A0E1A;
+}
+
+/* Leaflet chrome, repainted for the dark ground. */
+.leaflet-container { background: #0A0E1A; font-family: var(--body); outline: none; }
+.leaflet-control-attribution {
+  background: rgba(7, 10, 20, .82) !important; color: var(--ink-3) !important;
+  font-family: var(--mono); font-size: 9.5px !important; border-radius: 5px 0 0 0;
+}
+.leaflet-control-attribution a { color: var(--ink-3) !important; }
+.leaflet-bar a {
+  background: #0E1322; color: var(--ink); border-bottom-color: var(--line);
+}
+.leaflet-bar a:hover { background: #182238; color: var(--a2); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: #101728; color: var(--ink); border: 1px solid var(--line-bright);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .6);
+}
+.leaflet-popup-content { font-size: 13px; line-height: 1.5; margin: 12px 14px; }
+.leaflet-popup-content b { color: var(--a2); font-family: var(--mono); letter-spacing: .04em; }
+.leaflet-popup-close-button { color: var(--ink-3) !important; }
+
+/* Search-point marker: the same lamp language as the verdict. */
+.pin span {
+  display: block; width: 18px; height: 18px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #fff, var(--a3) 55%, #7B1FA2);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, .85), 0 0 22px 6px rgba(232, 121, 249, .7);
+}
+
+.map-legend {
+  display: flex; flex-wrap: wrap; gap: 18px; margin-top: 16px;
+  font-size: 12.5px; color: var(--ink-2);
+}
+.lg { display: flex; align-items: center; gap: 8px; }
+.lg i { width: 22px; height: 0; border-top-width: 3px; border-radius: 2px; flex: none; }
+.sw-ind { border-top: 3px solid #22D3EE; box-shadow: 0 0 10px rgba(34, 211, 238, .7); }
+.sw-main { border-top: 3px dashed #8B5CF6; }
+.sw-other { border-top: 3px dashed #55607F; }
+
+/* Industrial rows are the ones that decide the verdict, so they read first. */
+.ev tr.is-ind td { color: var(--ink); }
+.ev tr.is-ind td:first-child { color: #8FFBD6; }
+.ev tr.is-ind .net {
+  background: rgba(34, 211, 238, .16); border-color: rgba(34, 211, 238, .5); color: #A8ECF8;
+}
+
+@media (max-width: 640px) {
+  #mapwrap { padding: 20px 16px; }
+  #map { height: 320px; }
+  .radius-readout { font-size: 18px; }
+}

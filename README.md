@@ -81,26 +81,46 @@ address
    │               └─ OpenStreetMap via Overpass           → operator + spur tags
    │                  Distances computed client-side from returned geometry.
    │
-   ├─ 3. Classify ─── nearest industrial track ≤ 200 m → rail-served
-   │                  ≤ 400 m → possibly rail-served, flagged for verification
-   │                  otherwise → not rail-served
+   ├─ 3. Classify ─── nearest industrial track ≤ 250 m → rail-served
+   │                  ≤ 800 m → likely, flagged for verification
+   │                  beyond  → possible; may serve a neighbouring property
+   │                  no industrial track at all → not rail-served
    │
    └─ 4. Policy ───── reporting mark → carrier → verdict (assets/railroads.js)
 ```
 
-### Tuning
+### Search radius is user-controlled
 
-Both thresholds sit at the top of [`assets/app.js`](assets/app.js):
+**The radius slider is the most important control on the page.** A geocoder
+returns a *building centroid* or a street frontage. On a large industrial
+parcel the spur can sit several hundred metres from that point, so any fixed
+radius will report real customers as not rail-served.
+
+Measured at a known rail-served site in Chicago's Stockyards corridor:
+
+| Radius | What FRA returns |
+|--------|------------------|
+| 400 m | 2 industrial segments |
+| 800 m | 4 industrial, plus mainline and yard |
+| 1500 m | 11 industrial, 12 mainline, 28 yard |
+
+The slider runs **100 m – 3 km**, defaulting to 800 m. Widen it when a site you
+know is served comes back DARK. Widen too far and you start picking up track
+that serves the property next door — which is why every result shows the actual
+distance rather than just a verdict.
+
+**Clicking the map moves the search point.** If you know where the siding is,
+drop the pin directly on it; that is far more reliable than any radius.
+
+Defaults sit at the top of [`assets/app.js`](assets/app.js):
 
 ```js
-var SERVED_M = 200;   // industrial track this close => rail-served
-var SEARCH_M = 400;   // outer search radius
+var RADIUS_DEFAULT = 800;    // starting search radius, metres
+var RADIUS_MIN = 100;
+var RADIUS_MAX = 3000;
+var BAND_CONFIRMED = 250;    // industrial track this close => rail-served
+var BAND_LIKELY = 800;       // beyond this => "possible", flagged
 ```
-
-`SERVED_M` is set to 200 m deliberately. Geocoders return a *building centroid*,
-and industrial parcels are frequently 200 m or more across, so a tighter radius
-misses spurs that genuinely serve the property. Raising it increases false
-positives on dense industrial corridors; lowering it misses real customers.
 
 ## Raffle entries
 

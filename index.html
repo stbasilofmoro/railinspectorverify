@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 <link rel="stylesheet" href="assets/styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='38' fill='%2319E5A0'/></svg>">
 </head>
@@ -48,6 +49,29 @@
   </header>
 
   <div id="result" hidden></div>
+
+  <section class="edge" id="mapwrap" hidden>
+    <div class="map-head">
+      <div>
+        <p class="comp-label">Search area</p>
+        <p class="map-hint">Widen the radius if a site you know is rail-served comes back DARK — a geocoded address lands on the building, which can sit a long way from the spur. Click anywhere on the map to move the search point onto the track itself.</p>
+      </div>
+      <output class="radius-readout" id="radius-value" for="radius">800 m</output>
+    </div>
+
+    <label class="visually-hidden" for="radius">Search radius in metres</label>
+    <input type="range" id="radius" min="100" max="3000" step="50" value="800">
+    <div class="radius-scale"><span>100 m</span><span>1.5 km</span><span>3 km</span></div>
+    <p class="radius-note" id="radius-note"></p>
+
+    <div id="map"></div>
+
+    <div class="map-legend">
+      <span class="lg"><i class="sw-ind"></i>Industrial lead, spur or siding</span>
+      <span class="lg"><i class="sw-main"></i>Mainline</span>
+      <span class="lg"><i class="sw-other"></i>Yard, siding or other track</span>
+    </div>
+  </section>
 
   <section class="panel" id="legend">
     <p class="comp-label">What the four answers mean</p>
@@ -128,6 +152,7 @@
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="assets/railroads.js"></script>
 <script src="assets/app.js"></script>
 </body>
