@@ -1,0 +1,309 @@
+/* ============================================================================
+   RailInspectorVerify — "Signal Aspect" design system
+   Tokens and components follow docs/STYLE-GUIDE.html.
+
+   Committed to a single dark theme by design: glow is the whole visual
+   argument and it needs darkness to read. Every colour is painted explicitly
+   so the page never borrows a host background.
+   ========================================================================== */
+
+:root {
+  --ground: #070A14;
+  --surface: #0E1322;
+  --line: #1E2740;
+  --line-bright: #2C3A5C;
+
+  --ink: #EEF2FF;
+  --ink-2: #A7B2CF;
+  --ink-3: #6B779A;
+
+  --stop: #FF4D5A;
+  --stop-deep: #7A1420;
+  --approach: #FFB61F;
+  --approach-deep: #6B4405;
+  --clear: #19E5A0;
+  --clear-deep: #06503A;
+  --dark-aspect: #55607F;
+
+  --a1: #8B5CF6;
+  --a2: #22D3EE;
+  --a3: #E879F9;
+
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "Instrument Sans", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+  --shell: 960px;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--ground); }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ---- Ambient aurora ------------------------------------------------------ */
+.aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5; }
+.b1 { width: 52vw; height: 52vw; left: -14vw; top: -14vw;
+  background: radial-gradient(circle at 40% 40%, var(--a1), transparent 68%);
+  animation: drift1 34s ease-in-out infinite; }
+.b2 { width: 46vw; height: 46vw; right: -12vw; top: 8vw;
+  background: radial-gradient(circle at 55% 45%, var(--a2), transparent 68%);
+  animation: drift2 41s ease-in-out infinite; }
+.b3 { width: 44vw; height: 44vw; left: 26vw; bottom: -16vw; opacity: .34;
+  background: radial-gradient(circle at 50% 50%, var(--a3), transparent 70%);
+  animation: drift3 47s ease-in-out infinite; }
+@keyframes drift1 { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(9vw,7vw,0) scale(1.16); } }
+@keyframes drift2 { 0%,100% { transform: translate3d(0,0,0) scale(1.1); } 50% { transform: translate3d(-8vw,10vw,0) scale(.92); } }
+@keyframes drift3 { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(-10vw,-6vw,0) scale(1.2); } }
+
+.grain {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .16;
+  background: repeating-linear-gradient(90deg, transparent 0 58px, rgba(140,160,220,.16) 58px 59px);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 10%, transparent 78%);
+  mask-image: radial-gradient(ellipse at 50% 0%, #000 10%, transparent 78%);
+}
+
+.shell { position: relative; z-index: 2; max-width: var(--shell); margin: 0 auto; padding: 0 28px 96px; }
+
+/* ---- Masked gradient edge ------------------------------------------------ */
+.edge {
+  position: relative;
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, rgba(20,27,46,.86), rgba(10,14,28,.92));
+  backdrop-filter: blur(14px);
+}
+.edge::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
+  background: linear-gradient(140deg, rgba(139,92,246,.85), rgba(34,211,238,.5) 42%, rgba(232,121,249,.28) 72%, rgba(60,72,104,.25));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ---- Masthead ------------------------------------------------------------ */
+.masthead { padding: 76px 0 34px; }
+.kicker {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: .24em;
+  color: var(--a2); margin: 0 0 22px; text-transform: uppercase;
+}
+h1 {
+  font-family: var(--display); font-weight: 900;
+  font-size: clamp(40px, 7vw, 76px); line-height: .94; letter-spacing: -.035em;
+  margin: 0 0 22px; text-wrap: balance;
+  background: linear-gradient(96deg, #fff 8%, var(--a2) 42%, var(--a1) 66%, var(--a3) 88%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 42px rgba(139,92,246,.42));
+}
+.dek { font-size: 18px; line-height: 1.62; color: var(--ink-2); max-width: 58ch; margin: 0 0 30px; }
+.dek b { color: var(--ink); font-weight: 600; }
+
+/* ---- Address field ------------------------------------------------------- */
+.field-wrap { position: relative; border-radius: var(--r-md); }
+.field-wrap::before {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit;
+  background: linear-gradient(96deg, var(--a1), var(--a2), var(--a3));
+  opacity: .62; filter: blur(9px); z-index: 0; transition: opacity .35s;
+}
+.field-wrap:focus-within::before { opacity: 1; }
+.field {
+  position: relative; z-index: 1; display: flex; gap: 11px; align-items: center;
+  background: #0B101E; border: 1px solid var(--line-bright);
+  border-radius: var(--r-md); padding: 6px 6px 6px 17px;
+}
+.field input {
+  flex: 1; background: none; border: 0; outline: 0; color: var(--ink);
+  font-family: var(--body); font-size: 16px; padding: 13px 0; min-width: 0;
+}
+.field input::placeholder { color: var(--ink-3); }
+
+.btn {
+  font-family: var(--display); font-weight: 700; font-size: 14.5px;
+  color: #080C18; border: 0; cursor: pointer; padding: 13px 22px;
+  border-radius: 10px; background: linear-gradient(96deg, var(--a2), var(--a1));
+  box-shadow: 0 0 20px rgba(34,211,238,.42);
+  transition: transform .22s, box-shadow .22s, opacity .22s; white-space: nowrap;
+}
+.btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 0 30px rgba(34,211,238,.68); }
+.btn:disabled { opacity: .55; cursor: default; }
+
+.hint { font-size: 13px; color: var(--ink-3); margin: 13px 0 0; }
+
+/* ---- Result -------------------------------------------------------------- */
+#result { margin-top: 40px; display: flex; flex-direction: column; gap: 18px; }
+
+.loading {
+  display: flex; align-items: center; gap: 13px; padding: 26px;
+  border-radius: var(--r-lg); border: 1px solid var(--line);
+  background: rgba(20,27,46,.6); color: var(--ink-2); font-size: 15px;
+}
+.pulse {
+  width: 13px; height: 13px; border-radius: 50%; flex: none;
+  background: var(--a2); box-shadow: 0 0 16px var(--a2);
+  animation: breathe 1.5s ease-in-out infinite;
+}
+@keyframes breathe { 0%,100% { transform: scale(.72); opacity: .55; } 50% { transform: scale(1.15); opacity: 1; } }
+
+.verdict-card {
+  padding: 32px 30px; border-radius: var(--r-lg); position: relative;
+  background: linear-gradient(180deg, rgba(18,24,42,.9), rgba(9,13,26,.95));
+  border: 1px solid var(--line);
+}
+.verdict-head { display: flex; gap: 20px; align-items: center; margin-bottom: 17px; }
+
+.lamp { width: 56px; height: 56px; border-radius: 50%; position: relative; flex: none; }
+.lamp::after {
+  content: ""; position: absolute; inset: 12px; border-radius: 50%;
+  background: rgba(255,255,255,.9); opacity: .5; filter: blur(5px);
+}
+.s-stop .lamp {
+  background: radial-gradient(circle at 42% 36%, #FF97A0, var(--stop) 52%, var(--stop-deep));
+  box-shadow: 0 0 0 1px rgba(255,77,90,.5), 0 0 26px 5px rgba(255,77,90,.62), 0 0 68px 16px rgba(255,77,90,.34), inset 0 0 16px rgba(255,255,255,.34);
+}
+.s-approach .lamp {
+  background: radial-gradient(circle at 42% 36%, #FFDA8E, var(--approach) 52%, var(--approach-deep));
+  box-shadow: 0 0 0 1px rgba(255,182,31,.5), 0 0 26px 5px rgba(255,182,31,.62), 0 0 68px 16px rgba(255,182,31,.32), inset 0 0 16px rgba(255,255,255,.34);
+}
+.s-clear .lamp {
+  background: radial-gradient(circle at 42% 36%, #8FFBD6, var(--clear) 52%, var(--clear-deep));
+  box-shadow: 0 0 0 1px rgba(25,229,160,.5), 0 0 26px 5px rgba(25,229,160,.6), 0 0 68px 16px rgba(25,229,160,.3), inset 0 0 16px rgba(255,255,255,.34);
+}
+.s-dark .lamp {
+  background: radial-gradient(circle at 42% 36%, #39435F, #1A2136 60%, #10151F);
+  box-shadow: 0 0 0 1px rgba(85,96,127,.34), inset 0 3px 10px rgba(0,0,0,.7);
+}
+.s-dark .lamp::after { opacity: .05; }
+
+.aspect { font-family: var(--mono); font-weight: 700; font-size: 12px; letter-spacing: .2em; margin: 0 0 7px; }
+.s-stop .aspect { color: var(--stop); }
+.s-approach .aspect { color: var(--approach); }
+.s-clear .aspect { color: var(--clear); }
+.s-dark .aspect { color: var(--dark-aspect); }
+
+.verdict-title {
+  font-family: var(--display); font-weight: 800; font-size: clamp(22px, 3.4vw, 30px);
+  line-height: 1.14; letter-spacing: -.022em; margin: 0; text-wrap: balance;
+}
+.verdict-detail { font-size: 15.5px; color: var(--ink-2); line-height: 1.62; margin: 0; max-width: 62ch; }
+
+.matched {
+  display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+  margin-top: 20px; padding-top: 17px; border-top: 1px solid var(--line);
+}
+.matched-k {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--a2); white-space: nowrap;
+}
+.matched-v { font-size: 13.5px; color: var(--ink-2); }
+
+/* ---- Panels -------------------------------------------------------------- */
+.panel { padding: 24px; border-radius: var(--r-lg); border: 1px solid var(--line); background: rgba(14,19,34,.72); }
+.comp-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em; color: var(--ink-3); margin: 0 0 16px; text-transform: uppercase; }
+
+.rr { display: flex; align-items: center; gap: 15px; padding: 16px 18px; border-radius: var(--r-md);
+  background: rgba(255,255,255,.03); border: 1px solid var(--line); flex-wrap: wrap; }
+.rr-mark {
+  font-family: var(--mono); font-weight: 700; font-size: 16px; letter-spacing: .04em;
+  color: #08101E; background: linear-gradient(135deg, var(--a2), var(--a1));
+  padding: 10px 13px; border-radius: 9px; box-shadow: 0 0 18px rgba(34,211,238,.36);
+}
+.rr-name { font-weight: 600; font-size: 15.5px; margin: 0 0 2px; }
+.rr-sub { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); letter-spacing: .04em; margin: 0; }
+.rr-flag {
+  margin-left: auto; font-family: var(--mono); font-size: 10.5px; letter-spacing: .11em;
+  color: var(--approach); border: 1px solid rgba(255,182,31,.4);
+  background: rgba(255,182,31,.09); padding: 5px 10px; border-radius: 999px; text-transform: uppercase;
+}
+
+/* ---- Evidence table ------------------------------------------------------ */
+.scroll { overflow-x: auto; }
+.ev { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.ev th {
+  text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em;
+  color: var(--ink-3); font-weight: 400; padding: 0 14px 11px 0;
+  border-bottom: 1px solid var(--line); white-space: nowrap; text-transform: uppercase;
+}
+.ev td { padding: 12px 14px 12px 0; border-bottom: 1px solid rgba(30,39,64,.55); color: var(--ink-2); vertical-align: top; }
+.ev td:first-child { font-family: var(--mono); color: var(--a2); white-space: nowrap; font-size: 12.5px; }
+.ev tr:last-child td { border-bottom: 0; }
+.net {
+  font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 2px 7px;
+  border-radius: 4px; background: rgba(139,92,246,.16);
+  border: 1px solid rgba(139,92,246,.4); color: #C9B4FD; white-space: nowrap;
+}
+
+.fineprint { font-size: 12.5px; color: var(--ink-3); line-height: 1.56; margin: 14px 0 0; max-width: 72ch; }
+
+/* ---- Raffle -------------------------------------------------------------- */
+#raffle { margin-top: 44px; padding: 30px; border-radius: var(--r-lg); }
+.prize {
+  display: flex; align-items: center; gap: 13px; margin-bottom: 22px;
+  padding: 14px 17px; border-radius: var(--r-md); flex-wrap: wrap;
+  background: linear-gradient(96deg, rgba(139,92,246,.16), rgba(34,211,238,.08));
+  border: 1px solid rgba(139,92,246,.32);
+}
+.prize-b { font-family: var(--display); font-weight: 800; font-size: 15.5px; }
+.prize-s { font-size: 12.5px; color: var(--ink-2); }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.fg { display: flex; flex-direction: column; gap: 7px; }
+.fg label { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; color: var(--ink-3); text-transform: uppercase; }
+.fg input {
+  background: #0B101E; border: 1px solid var(--line); border-radius: 9px;
+  padding: 12px 13px; color: var(--ink); font-family: var(--body); font-size: 14.5px;
+  outline: 0; transition: border-color .22s, box-shadow .22s; min-width: 0;
+}
+.fg input:focus { border-color: var(--a2); box-shadow: 0 0 0 3px rgba(34,211,238,.16), 0 0 20px rgba(34,211,238,.2); }
+
+.form-status { margin: 16px 0 0; font-size: 14px; }
+.form-status.ok { color: var(--clear); }
+.form-status.err { color: var(--stop); }
+
+/* ---- Footer -------------------------------------------------------------- */
+footer {
+  margin-top: 64px; padding-top: 28px; border-top: 1px solid var(--line);
+  display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: .06em;
+}
+footer a { color: var(--ink-3); text-decoration: none; border-bottom: 1px solid var(--line-bright); }
+footer a:hover { color: var(--a2); }
+
+/* ---- Responsive & accessibility ------------------------------------------ */
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .masthead { padding: 52px 0 28px; }
+  .shell { padding: 0 18px 68px; }
+  .field { flex-wrap: wrap; }
+  .field input { padding: 11px 0; }
+  .btn { width: 100%; }
+  .verdict-card, #raffle, .panel { padding: 22px 18px; }
+  .verdict-head { gap: 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+:focus-visible { outline: 2px solid var(--a2); outline-offset: 3px; border-radius: 4px; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}

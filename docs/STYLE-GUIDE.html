@@ -1,0 +1,535 @@
+<title>Signal Aspect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --ground:#070A14;
+  --surface:#0E1322;
+  --line:#1E2740;
+  --line-bright:#2C3A5C;
+
+  --ink:#EEF2FF;
+  --ink-2:#A7B2CF;
+  --ink-3:#6B779A;
+
+  --stop:#FF4D5A;
+  --stop-deep:#7A1420;
+  --approach:#FFB61F;
+  --approach-deep:#6B4405;
+  --clear:#19E5A0;
+  --clear-deep:#06503A;
+  --dark-aspect:#55607F;
+
+  --a1:#8B5CF6;
+  --a2:#22D3EE;
+  --a3:#E879F9;
+
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Instrument Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Consolas,monospace;
+
+  --r-sm:8px; --r-md:14px; --r-lg:22px;
+  --shell:1140px;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  position:relative;
+}
+
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5}
+.b1{width:52vw;height:52vw;left:-14vw;top:-14vw;background:radial-gradient(circle at 40% 40%,var(--a1),transparent 68%);animation:drift1 34s ease-in-out infinite}
+.b2{width:46vw;height:46vw;right:-12vw;top:8vw;background:radial-gradient(circle at 55% 45%,var(--a2),transparent 68%);animation:drift2 41s ease-in-out infinite}
+.b3{width:44vw;height:44vw;left:26vw;bottom:-16vw;background:radial-gradient(circle at 50% 50%,var(--a3),transparent 70%);opacity:.34;animation:drift3 47s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(9vw,7vw,0) scale(1.16)}}
+@keyframes drift2{0%,100%{transform:translate3d(0,0,0) scale(1.1)}50%{transform:translate3d(-8vw,10vw,0) scale(.92)}}
+@keyframes drift3{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-10vw,-6vw,0) scale(1.2)}}
+
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.16;
+  background:repeating-linear-gradient(90deg,transparent 0 58px,rgba(140,160,220,.16) 58px 59px);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 10%,transparent 78%);
+  mask-image:radial-gradient(ellipse at 50% 0%,#000 10%,transparent 78%)}
+
+.shell{position:relative;z-index:2;max-width:var(--shell);margin:0 auto;padding:0 28px 120px}
+
+.edge{position:relative;border-radius:var(--r-lg);background:linear-gradient(180deg,rgba(20,27,46,.86),rgba(10,14,28,.92));backdrop-filter:blur(14px)}
+.edge::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(140deg,rgba(139,92,246,.85),rgba(34,211,238,.5) 42%,rgba(232,121,249,.28) 72%,rgba(60,72,104,.25));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  pointer-events:none}
+
+.masthead{padding:96px 0 60px}
+.kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.24em;color:var(--a2);margin:0 0 26px;text-transform:uppercase}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(48px,8.2vw,104px);line-height:.92;letter-spacing:-.035em;margin:0 0 26px;text-wrap:balance;
+  background:linear-gradient(96deg,#fff 8%,var(--a2) 42%,var(--a1) 66%,var(--a3) 88%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 42px rgba(139,92,246,.42))}
+.dek{font-size:19px;line-height:1.62;color:var(--ink-2);max-width:60ch;margin:0 0 34px}
+.dek b{color:var(--ink);font-weight:600}
+.meta{display:flex;flex-wrap:wrap;gap:10px}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink-2);
+  border:1px solid var(--line);background:rgba(20,27,46,.7);padding:7px 13px;border-radius:999px}
+
+section{padding:64px 0 8px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(27px,3.6vw,40px);letter-spacing:-.025em;margin:0;color:var(--ink)}
+.sec-note{font-size:15.5px;color:var(--ink-2);max-width:66ch;margin:0 0 34px;line-height:1.66}
+.rule{height:1px;background:linear-gradient(90deg,var(--a1),var(--a2) 30%,transparent 80%);opacity:.5;margin:0 0 30px}
+
+.signals{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:20px}
+.signal{padding:28px 24px 24px;border-radius:var(--r-lg);position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(18,24,42,.9),rgba(9,13,26,.95));border:1px solid var(--line)}
+.lamp{width:60px;height:60px;border-radius:50%;margin-bottom:22px;position:relative;display:grid;place-items:center}
+.lamp::after{content:"";position:absolute;inset:13px;border-radius:50%;background:rgba(255,255,255,.9);opacity:.5;filter:blur(5px)}
+.s-stop .lamp{background:radial-gradient(circle at 42% 36%,#FF97A0,var(--stop) 52%,var(--stop-deep));
+  box-shadow:0 0 0 1px rgba(255,77,90,.5),0 0 26px 5px rgba(255,77,90,.62),0 0 68px 16px rgba(255,77,90,.34),inset 0 0 16px rgba(255,255,255,.34)}
+.s-appr .lamp{background:radial-gradient(circle at 42% 36%,#FFDA8E,var(--approach) 52%,var(--approach-deep));
+  box-shadow:0 0 0 1px rgba(255,182,31,.5),0 0 26px 5px rgba(255,182,31,.62),0 0 68px 16px rgba(255,182,31,.32),inset 0 0 16px rgba(255,255,255,.34)}
+.s-clear .lamp{background:radial-gradient(circle at 42% 36%,#8FFBD6,var(--clear) 52%,var(--clear-deep));
+  box-shadow:0 0 0 1px rgba(25,229,160,.5),0 0 26px 5px rgba(25,229,160,.6),0 0 68px 16px rgba(25,229,160,.3),inset 0 0 16px rgba(255,255,255,.34)}
+.s-dark .lamp{background:radial-gradient(circle at 42% 36%,#39435F,#1A2136 60%,#10151F);
+  box-shadow:0 0 0 1px rgba(85,96,127,.34),inset 0 3px 10px rgba(0,0,0,.7)}
+.s-dark .lamp::after{opacity:.05}
+.aspect{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.2em;margin-bottom:9px}
+.s-stop .aspect{color:var(--stop)}
+.s-appr .aspect{color:var(--approach)}
+.s-clear .aspect{color:var(--clear)}
+.s-dark .aspect{color:var(--dark-aspect)}
+.verdict{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.22;letter-spacing:-.015em;margin-bottom:11px;text-wrap:balance}
+.who{font-size:14px;color:var(--ink-2);line-height:1.55;margin-bottom:16px}
+.marks{display:flex;flex-wrap:wrap;gap:6px}
+.mark{font-family:var(--mono);font-weight:700;font-size:11.5px;letter-spacing:.06em;padding:4px 9px;border-radius:5px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--ink-2)}
+.s-stop .mark{border-color:rgba(255,77,90,.36);color:#FFB3B9;background:rgba(255,77,90,.09)}
+.s-appr .mark{border-color:rgba(255,182,31,.36);color:#FFDFA3;background:rgba(255,182,31,.09)}
+.s-clear .mark{border-color:rgba(25,229,160,.34);color:#93F2D2;background:rgba(25,229,160,.08)}
+
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.sw{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+.chip{height:88px}
+.sw-body{padding:12px 14px 14px}
+.sw-name{font-size:13.5px;font-weight:600;margin-bottom:3px}
+.sw-hex{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.05em}
+.sw-use{font-size:12px;color:var(--ink-3);margin-top:7px;line-height:1.48}
+
+.spec{border-left:2px solid var(--a1);padding:2px 0 2px 22px;margin-bottom:32px}
+.spec-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--ink-3);margin-bottom:12px}
+.t-display{font-family:var(--display);font-weight:900;font-size:clamp(34px,5.4vw,60px);letter-spacing:-.035em;line-height:.98;margin:0 0 8px}
+.t-h2{font-family:var(--display);font-weight:800;font-size:31px;letter-spacing:-.022em;margin:0 0 8px}
+.t-body{font-size:16.5px;color:var(--ink-2);max-width:64ch;line-height:1.68;margin:0 0 8px}
+.t-mono{font-family:var(--mono);font-size:15px;color:var(--a2);letter-spacing:.04em}
+.t-note{font-size:12.5px;color:var(--ink-3);margin-top:9px;line-height:1.5}
+
+.tech{display:grid;grid-template-columns:repeat(auto-fit,minmax(292px,1fr));gap:20px}
+.tcard{padding:24px;border-radius:var(--r-lg)}
+.tdemo{height:132px;border-radius:var(--r-md);margin-bottom:19px;position:relative;overflow:hidden;display:grid;place-items:center;background:#080B15}
+.t-title{font-family:var(--display);font-weight:700;font-size:16.5px;margin-bottom:7px}
+.t-desc{font-size:13.5px;color:var(--ink-2);line-height:1.56;margin-bottom:13px}
+code.snip{display:block;font-family:var(--mono);font-size:11px;line-height:1.62;color:#9FB4E6;
+  background:rgba(4,7,14,.82);border:1px solid var(--line);border-radius:var(--r-sm);padding:12px;overflow-x:auto;white-space:pre}
+
+.d-border{width:112px;height:66px;border-radius:12px;position:relative;background:#0E1322}
+.d-border::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+  background:conic-gradient(from 0deg,var(--a1),var(--a2),var(--a3),var(--a1));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(1turn)}}
+.d-stack{width:96px;height:66px;border-radius:12px;background:linear-gradient(140deg,#1B2340,#0D1222);
+  box-shadow:0 0 22px rgba(139,92,246,.62),0 0 46px rgba(34,211,238,.34),0 0 88px rgba(232,121,249,.24)}
+.d-bloom{position:absolute;width:118px;height:118px;border-radius:50%;filter:blur(30px);
+  background:radial-gradient(circle,var(--a2),transparent 66%);animation:breathe 5s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(.82);opacity:.62}50%{transform:scale(1.18);opacity:1}}
+.d-bloom-core{position:relative;width:74px;height:74px;border-radius:16px;background:#0B0F1C;border:1px solid rgba(34,211,238,.5);display:grid;place-items:center;
+  font-family:var(--mono);font-size:10.5px;color:var(--a2);letter-spacing:.08em}
+
+.stack{display:flex;flex-direction:column;gap:22px}
+.comp{padding:28px;border-radius:var(--r-lg)}
+.comp-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--ink-3);margin-bottom:17px}
+
+.field-wrap{position:relative;border-radius:var(--r-md)}
+.field-wrap::before{content:"";position:absolute;inset:-1px;border-radius:inherit;
+  background:linear-gradient(96deg,var(--a1),var(--a2),var(--a3));opacity:.62;filter:blur(9px);z-index:0;transition:opacity .35s}
+.field-wrap:focus-within::before{opacity:1}
+.field{position:relative;z-index:1;display:flex;gap:11px;align-items:center;background:#0B101E;border:1px solid var(--line-bright);
+  border-radius:var(--r-md);padding:6px 6px 6px 17px}
+.field input{flex:1;background:none;border:0;outline:0;color:var(--ink);font-family:var(--body);font-size:16px;padding:13px 0;min-width:0}
+.field input::placeholder{color:var(--ink-3)}
+.btn{font-family:var(--display);font-weight:700;font-size:14.5px;color:#080C18;border:0;cursor:pointer;
+  padding:13px 22px;border-radius:10px;background:linear-gradient(96deg,var(--a2),var(--a1));
+  box-shadow:0 0 20px rgba(34,211,238,.42);transition:transform .22s,box-shadow .22s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(34,211,238,.68)}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--line-bright);color:var(--ink);box-shadow:none;font-weight:600}
+.btn-ghost:hover{background:rgba(255,255,255,.09);box-shadow:none}
+
+.rr{display:flex;align-items:center;gap:15px;padding:16px 18px;border-radius:var(--r-md);
+  background:rgba(255,255,255,.03);border:1px solid var(--line);flex-wrap:wrap}
+.rr-mark{font-family:var(--mono);font-weight:700;font-size:16px;letter-spacing:.04em;color:#08101E;
+  background:linear-gradient(135deg,var(--a2),var(--a1));padding:10px 13px;border-radius:9px;box-shadow:0 0 18px rgba(34,211,238,.36)}
+.rr-name{font-weight:600;font-size:15.5px;margin-bottom:2px}
+.rr-sub{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.04em}
+.rr-flag{margin-left:auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;color:var(--approach);
+  border:1px solid rgba(255,182,31,.4);background:rgba(255,182,31,.09);padding:5px 10px;border-radius:999px}
+
+.ev{width:100%;border-collapse:collapse;font-size:13.5px}
+.ev th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink-3);
+  font-weight:400;padding:0 14px 11px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+.ev td{padding:12px 14px 12px 0;border-bottom:1px solid rgba(30,39,64,.55);color:var(--ink-2);vertical-align:top}
+.ev td:first-child{font-family:var(--mono);color:var(--a2);white-space:nowrap;font-size:12.5px}
+.ev tr:last-child td{border-bottom:0}
+.net{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;
+  background:rgba(139,92,246,.16);border:1px solid rgba(139,92,246,.4);color:#C9B4FD}
+.scroll{overflow-x:auto}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.fg{display:flex;flex-direction:column;gap:7px}
+.fg label{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink-3)}
+.fg input{background:#0B101E;border:1px solid var(--line);border-radius:9px;padding:12px 13px;
+  color:var(--ink);font-family:var(--body);font-size:14.5px;outline:0;transition:border-color .22s,box-shadow .22s;min-width:0}
+.fg input:focus{border-color:var(--a2);box-shadow:0 0 0 3px rgba(34,211,238,.16),0 0 20px rgba(34,211,238,.2)}
+.prize{display:flex;align-items:center;gap:13px;margin-bottom:20px;padding:13px 16px;border-radius:var(--r-md);
+  background:linear-gradient(96deg,rgba(139,92,246,.16),rgba(34,211,238,.08));border:1px solid rgba(139,92,246,.32);flex-wrap:wrap}
+.prize-b{font-family:var(--display);font-weight:800;font-size:15px}
+.prize-s{font-size:12.5px;color:var(--ink-2)}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:18px}
+.pcard{padding:22px;border-radius:var(--r-md);background:rgba(255,255,255,.028);border:1px solid var(--line)}
+.pnum{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--a2);margin-bottom:11px}
+.ptitle{font-family:var(--display);font-weight:700;font-size:16.5px;margin-bottom:8px}
+.ptext{font-size:13.5px;color:var(--ink-2);line-height:1.6}
+.ptext code{font-family:var(--mono);font-size:12px;color:#9FB4E6;background:rgba(4,7,14,.7);padding:1px 5px;border-radius:4px}
+
+footer{margin-top:76px;padding-top:30px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+
+@media (max-width:640px){
+  .form-grid{grid-template-columns:1fr}
+  .masthead{padding:60px 0 40px}
+  .shell{padding:0 18px 80px}
+  .field{flex-wrap:wrap}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+}
+:focus-visible{outline:2px solid var(--a2);outline-offset:3px;border-radius:4px}
+</style>
+
+<div class="aurora" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="kicker">Style guide &middot; RailInspectorVerify</p>
+    <h1>Signal<br>Aspect</h1>
+    <p class="dek">A visual system for a tool that answers one question: <b>is this address served by a railroad, and does that railroad require independent tie inspections?</b> The answer is a signal aspect — the same red, amber, and green a crew reads from the right-of-way.</p>
+    <div class="meta">
+      <span class="tag">DARK GROUND ONLY</span>
+      <span class="tag">FRA NARN + OPENSTREETMAP</span>
+      <span class="tag">STATIC / NO BACKEND</span>
+      <span class="tag">WCAG AA TEXT</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head"><h2>The signal aspect</h2></div>
+    <p class="sec-note">Wayside signals already encode exactly the logic this tool needs, so the verdict is not styled as a generic alert — it is styled as a lamp. Red means work is required before ties move; green means the railroad accepts its own inspection; amber means a human has to call. These three hues are reserved for verdicts and appear nowhere else in the interface.</p>
+    <div class="rule"></div>
+    <div class="signals">
+
+      <article class="signal s-stop">
+        <div class="lamp"></div>
+        <p class="aspect">STOP</p>
+        <p class="verdict">Independent inspection required</p>
+        <p class="who">These railroads require a third-party inspection before crossties are removed or disposed.</p>
+        <div class="marks">
+          <span class="mark">CSXT</span><span class="mark">UP</span><span class="mark">BNSF</span><span class="mark">CPKC</span>
+        </div>
+      </article>
+
+      <article class="signal s-clear">
+        <div class="lamp"></div>
+        <p class="aspect">CLEAR</p>
+        <p class="verdict">No independent inspection</p>
+        <p class="who">These railroads accept their own internal inspection. NS is flagged as under review pending the Union Pacific merger.</p>
+        <div class="marks">
+          <span class="mark">NS</span><span class="mark">CN</span>
+        </div>
+      </article>
+
+      <article class="signal s-appr">
+        <div class="lamp"></div>
+        <p class="aspect">APPROACH</p>
+        <p class="verdict">Confirm with the railroad</p>
+        <p class="who">Short lines and regionals set their own policy. The tool names the operator and hands off — it never guesses.</p>
+        <div class="marks">
+          <span class="mark">WSOR</span><span class="mark">IHB</span><span class="mark">PAL</span><span class="mark">+ 600 more</span>
+        </div>
+      </article>
+
+      <article class="signal s-dark">
+        <div class="lamp"></div>
+        <p class="aspect">DARK</p>
+        <p class="verdict">No rail service found</p>
+        <p class="who">No industrial lead, spur, or siding within range. A mainline passing nearby does not make a property rail-served.</p>
+        <div class="marks">
+          <span class="mark">NO TRACK &lt; 400 m</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Ground and ink</h2></div>
+    <p class="sec-note">The page commits to a single dark world rather than shipping a light theme. Glow is the entire visual argument, and glow needs darkness to read — a light variant would land as a different product. The ground is blue-biased rather than neutral grey, so the aurora sits in the same family as the surface it lights.</p>
+    <div class="rule"></div>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#070A14"></div><div class="sw-body"><p class="sw-name">Ground</p><p class="sw-hex">#070A14</p><p class="sw-use">Page base. Never pure black.</p></div></div>
+      <div class="sw"><div class="chip" style="background:#0E1322"></div><div class="sw-body"><p class="sw-name">Surface</p><p class="sw-hex">#0E1322</p><p class="sw-use">Cards, fields, panels.</p></div></div>
+      <div class="sw"><div class="chip" style="background:#1E2740"></div><div class="sw-body"><p class="sw-name">Line</p><p class="sw-hex">#1E2740</p><p class="sw-use">Hairlines and dividers.</p></div></div>
+      <div class="sw"><div class="chip" style="background:#EEF2FF"></div><div class="sw-body"><p class="sw-name">Ink</p><p class="sw-hex">#EEF2FF</p><p class="sw-use">Headings, primary text.</p></div></div>
+      <div class="sw"><div class="chip" style="background:#A7B2CF"></div><div class="sw-body"><p class="sw-name">Ink 2</p><p class="sw-hex">#A7B2CF</p><p class="sw-use">Body copy. 7.4:1 on ground.</p></div></div>
+      <div class="sw"><div class="chip" style="background:#6B779A"></div><div class="sw-body"><p class="sw-name">Ink 3</p><p class="sw-hex">#6B779A</p><p class="sw-use">Labels and captions only.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Aurora</h2></div>
+    <p class="sec-note">Three drifting radial fields sit behind everything at long, mismatched durations — 34s, 41s, 47s — so the loop never visibly repeats. This is the brand accent and it stays away from verdict color entirely; nothing semantic is ever violet, cyan, or magenta.</p>
+    <div class="rule"></div>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#8B5CF6"></div><div class="sw-body"><p class="sw-name">Aurora violet</p><p class="sw-hex">#8B5CF6</p><p class="sw-use">Primary accent, gradient origin.</p></div></div>
+      <div class="sw"><div class="chip" style="background:#22D3EE"></div><div class="sw-body"><p class="sw-name">Aurora cyan</p><p class="sw-hex">#22D3EE</p><p class="sw-use">Interactive, focus, data keys.</p></div></div>
+      <div class="sw"><div class="chip" style="background:#E879F9"></div><div class="sw-body"><p class="sw-name">Aurora magenta</p><p class="sw-hex">#E879F9</p><p class="sw-use">Gradient tail. Never solid.</p></div></div>
+      <div class="sw"><div class="chip" style="background:linear-gradient(96deg,#22D3EE,#8B5CF6,#E879F9)"></div><div class="sw-body"><p class="sw-name">Signature ramp</p><p class="sw-hex">96deg &middot; cyan &rarr; violet &rarr; magenta</p><p class="sw-use">Buttons, edges, display type.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Type</h2></div>
+    <p class="sec-note">Archivo carries headings — a grotesque with the squared-off weight of railroad signage and equipment lettering. Instrument Sans handles reading text. JetBrains Mono is reserved for the industry's own fixed-width vocabulary: AAR reporting marks, FRA network codes, coordinates. Mono here is data, not decoration.</p>
+    <div class="rule"></div>
+
+    <div class="spec">
+      <p class="spec-label">DISPLAY &middot; ARCHIVO 900 &middot; TRACKING &minus;0.035EM</p>
+      <p class="t-display">Rail-served</p>
+      <p class="t-note">Headlines only. Set tight, clamped from 34px to 60px, gradient-filled on the masthead alone.</p>
+    </div>
+
+    <div class="spec">
+      <p class="spec-label">HEADING &middot; ARCHIVO 800 &middot; 31PX</p>
+      <p class="t-h2">Which railroad serves this address?</p>
+      <p class="t-note">Section headings and verdict statements.</p>
+    </div>
+
+    <div class="spec">
+      <p class="spec-label">BODY &middot; INSTRUMENT SANS 400 &middot; 16.5 / 1.68</p>
+      <p class="t-body">An industrial lead touching the parcel means the property is genuinely rail-served. A Class I mainline running past the fence line does not, and the tool says so rather than reporting a railroad the shipper cannot actually use.</p>
+      <p class="t-note">Measure capped near 64 characters.</p>
+    </div>
+
+    <div class="spec">
+      <p class="spec-label">DATA &middot; JETBRAINS MONO 700 &middot; TRACKING 0.04EM</p>
+      <p class="t-mono">CSXT &middot; UP &middot; BNSF &middot; CPKC &middot; NS &middot; CN &middot; NET=I &middot; 41.8315, &minus;87.6627</p>
+      <p class="t-note">Reporting marks, FRA network codes, latitude and longitude.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>How the glow is built</h2></div>
+    <p class="sec-note">Three techniques, used consistently. Everything that appears to emit light is one of these — no drop shadows stamped on arbitrary elements, and no glow on anything that is not either interactive or a verdict.</p>
+    <div class="rule"></div>
+    <div class="tech">
+
+      <article class="tcard edge">
+        <div class="tdemo"><div class="d-border"></div></div>
+        <p class="t-title">Masked gradient edge</p>
+        <p class="t-desc">A hairline that runs through the full ramp. The element paints a gradient, then masks out everything but a 1px frame. Rotating the conic makes the edge travel.</p>
+        <code class="snip">padding:1px;
+background:conic-gradient(...);
+mask:linear-gradient(#000 0 0) content-box,
+     linear-gradient(#000 0 0);
+mask-composite:exclude;</code>
+      </article>
+
+      <article class="tcard edge">
+        <div class="tdemo"><div class="d-stack"></div></div>
+        <p class="t-title">Stacked colored shadow</p>
+        <p class="t-desc">Three shadows at increasing blur and decreasing opacity, each a different hue. The overlap reads as a gradient halo rather than three separate rings.</p>
+        <code class="snip">box-shadow:
+  0 0 22px rgba(139,92,246,.62),
+  0 0 46px rgba(34,211,238,.34),
+  0 0 88px rgba(232,121,249,.24);</code>
+      </article>
+
+      <article class="tcard edge">
+        <div class="tdemo">
+          <div class="d-bloom"></div>
+          <div class="d-bloom-core">NET=I</div>
+        </div>
+        <p class="t-title">Bloom behind the object</p>
+        <p class="t-desc">A blurred radial sibling sits behind the element and breathes. This is how the search field lights when focused and how each signal lamp carries its aspect into the surrounding dark.</p>
+        <code class="snip">filter:blur(30px);
+background:radial-gradient(circle,
+  var(--a2),transparent 66%);
+animation:breathe 5s ease-in-out infinite;</code>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Components</h2></div>
+    <p class="sec-note">Shown with real output from the FRA National Rail Network and OpenStreetMap for a rail-served industrial parcel in the Stockyards corridor, Chicago. These are specimens, not a live lookup.</p>
+    <div class="rule"></div>
+
+    <div class="stack">
+
+      <div class="comp edge">
+        <p class="comp-label">ADDRESS ENTRY &middot; THE ONE THING ON FIRST PAINT</p>
+        <div class="field-wrap">
+          <div class="field">
+            <input type="text" value="1400 W 35th St, Chicago, IL 60609" aria-label="Property address">
+            <button class="btn">Check this address</button>
+          </div>
+        </div>
+        <p class="t-note" style="margin-top:14px">Focus intensifies the bloom rather than swapping the border color. Placeholder reads <em>Street address, city, state</em>.</p>
+      </div>
+
+      <div class="comp edge">
+        <p class="comp-label">RAILROAD IDENTITY</p>
+        <div class="stack" style="gap:11px">
+          <div class="rr">
+            <span class="rr-mark">UP</span>
+            <div><p class="rr-name">Union Pacific Railroad</p><p class="rr-sub">CLASS I &middot; GENEVA SUBDIVISION &middot; OWNER</p></div>
+          </div>
+          <div class="rr">
+            <span class="rr-mark" style="background:linear-gradient(135deg,#FFB61F,#FF8A3D)">NS</span>
+            <div><p class="rr-name">Norfolk Southern Railway</p><p class="rr-sub">CLASS I &middot; TRACKAGE RIGHTS</p></div>
+            <span class="rr-flag">POLICY UNDER REVIEW</span>
+          </div>
+        </div>
+        <p class="t-note" style="margin-top:14px">The reporting mark is the identifier crews and shippers actually use, so it leads. The review flag carries the pending UP&ndash;NS merger without hard-coding a guess about the outcome.</p>
+      </div>
+
+      <div class="comp edge">
+        <p class="comp-label">EVIDENCE &middot; WHY THE TOOL SAYS WHAT IT SAYS</p>
+        <div class="scroll">
+          <table class="ev">
+            <thead><tr><th>SOURCE</th><th>FINDING</th><th>DISTANCE</th><th>CLASS</th></tr></thead>
+            <tbody>
+              <tr><td>FRA NARN</td><td>Union Pacific &mdash; industrial lead</td><td>38 m</td><td><span class="net">NET=I</span></td></tr>
+              <tr><td>FRA NARN</td><td>Union Pacific &mdash; Geneva Sub mainline</td><td>210 m</td><td><span class="net">NET=M</span></td></tr>
+              <tr><td>OSM</td><td>railway=spur, operator=Union Pacific</td><td>41 m</td><td><span class="net">SPUR</span></td></tr>
+              <tr><td>Nominatim</td><td>Matched to building centroid</td><td>&mdash;</td><td><span class="net">EXACT</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="t-note" style="margin-top:14px">Every verdict shows its work. The distance column is what separates a rail-served parcel from one that merely sits near a mainline.</p>
+      </div>
+
+      <div class="comp edge">
+        <p class="comp-label">RAFFLE ENTRY &middot; AFTER THE RESULT, NEVER BEFORE IT</p>
+        <div class="prize">
+          <span class="prize-b">Win a Nintendo Switch 2</span>
+          <span class="prize-s">One entry per company. Drawn when entries close.</span>
+        </div>
+        <div class="form-grid">
+          <div class="fg"><label for="d-n">NAME</label><input id="d-n" type="text" value="Basil Moro"></div>
+          <div class="fg"><label for="d-c">COMPANY</label><input id="d-c" type="text" value="Tie Disposal"></div>
+          <div class="fg"><label for="d-e">EMAIL</label><input id="d-e" type="email" value="basil@tiedisposal.com"></div>
+          <div class="fg"><label for="d-p">PHONE</label><input id="d-p" type="tel" value="(816) 555-0142"></div>
+        </div>
+        <div style="display:flex;gap:11px;margin-top:19px;flex-wrap:wrap">
+          <button class="btn">Enter the drawing</button>
+          <button class="btn btn-ghost">Check another address</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Motion and restraint</h2></div>
+    <p class="sec-note">Fluidity comes from a few slow, continuous fields rather than many short entrance animations. Nothing waits on a scroll observer, so the page is whole the moment it paints.</p>
+    <div class="rule"></div>
+    <div class="cols">
+      <div class="pcard">
+        <p class="pnum">AMBIENT</p>
+        <p class="ptitle">Slow and unsynchronized</p>
+        <p class="ptext">Aurora fields run 34&ndash;47s on mismatched cycles. Long enough that the movement is felt rather than watched.</p>
+      </div>
+      <div class="pcard">
+        <p class="pnum">RESPONSE</p>
+        <p class="ptitle">Motion answers an action</p>
+        <p class="ptext">Focus, hover, and the lamp lighting on a result. Transitions stay at <code>.22s</code>&ndash;<code>.35s</code>; anything slower feels broken.</p>
+      </div>
+      <div class="pcard">
+        <p class="pnum">ARRIVAL</p>
+        <p class="ptitle">One orchestrated moment</p>
+        <p class="ptext">The verdict lamp ignites once — bloom scales from 0.8 while opacity rises. It is the only entrance animation in the product.</p>
+      </div>
+      <div class="pcard">
+        <p class="pnum">OPT OUT</p>
+        <p class="ptitle">Reduced motion is total</p>
+        <p class="ptext"><code>prefers-reduced-motion</code> halts every animation and transition. The lamp still glows; it simply arrives already lit.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Rules that keep it honest</h2></div>
+    <div class="rule"></div>
+    <div class="cols">
+      <div class="pcard">
+        <p class="pnum">COLOR</p>
+        <p class="ptitle">Aspect color is never decorative</p>
+        <p class="ptext">Red, amber, and green appear only on a verdict. If an element is not answering the inspection question, it uses aurora or ink.</p>
+      </div>
+      <div class="pcard">
+        <p class="pnum">CONTRAST</p>
+        <p class="ptitle">Glow is not the signal</p>
+        <p class="ptext">Every aspect pairs its lamp with a word — STOP, CLEAR, APPROACH, DARK — so the verdict survives color blindness and a bright screen.</p>
+      </div>
+      <div class="pcard">
+        <p class="pnum">GLOW</p>
+        <p class="ptitle">Light means live</p>
+        <p class="ptext">Only interactive controls and verdicts emit. Static panels get a masked edge at most, which is why the edge reads as structure.</p>
+      </div>
+      <div class="pcard">
+        <p class="pnum">CERTAINTY</p>
+        <p class="ptitle">Amber is a real answer</p>
+        <p class="ptext">The tool is allowed not to know. Short-line coverage is genuinely uneven, and a confident wrong answer costs a shipper more than an honest handoff.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>RAILINSPECTORVERIFY &middot; STYLE GUIDE v1</span>
+    <span>ARCHIVO &middot; INSTRUMENT SANS &middot; JETBRAINS MONO</span>
+    <span>FRA NARN &middot; OSM ODbL</span>
+  </footer>
+
+</div>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RailInspectorVerify — Is your address rail-served?</title>
+<meta name="description" content="Check whether an address is served by a railroad, identify the operator, and see whether that railroad requires an independent crosstie inspection.">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:title" content="RailInspectorVerify">
+<meta property="og:description" content="Find out which railroad serves an address — and whether it requires an independent tie inspection.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='38' fill='%2319E5A0'/></svg>">
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="shell">
+
+  <header class="masthead">
+    <p class="kicker">Tie Disposal</p>
+    <h1>Is your address rail&#8209;served?</h1>
+    <p class="dek">Enter a property address to find out whether a railroad actually serves it, which railroad that is, and <b>whether they require an independent crosstie inspection</b> before ties can be removed.</p>
+
+    <form id="lookup" autocomplete="off">
+      <label class="visually-hidden" for="address">Property address</label>
+      <div class="field-wrap">
+        <div class="field">
+          <input id="address" name="address" type="text"
+                 placeholder="Street address, city, state"
+                 autocomplete="street-address" required>
+          <button class="btn" id="lookup-btn" type="submit">Check this address</button>
+        </div>
+      </div>
+      <p class="hint">Works for United States addresses. Nothing you enter is stored or sent anywhere except the public map services used to locate it.</p>
+    </form>
+  </header>
+
+  <div id="result" hidden></div>
+
+  <section class="panel" id="legend">
+    <p class="comp-label">What the four answers mean</p>
+    <div class="scroll">
+      <table class="ev">
+        <thead>
+          <tr><th>Aspect</th><th>Meaning</th><th>Railroads</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:#FF4D5A">STOP</td>
+            <td>An independent, third-party inspection is required before ties are removed.</td>
+            <td><span class="net">CSX</span> <span class="net">UP</span> <span class="net">BNSF</span> <span class="net">CPKC</span></td>
+          </tr>
+          <tr>
+            <td style="color:#19E5A0">CLEAR</td>
+            <td>The railroad accepts its own internal inspection. No third party needed.</td>
+            <td><span class="net">NS</span> <span class="net">CN</span></td>
+          </tr>
+          <tr>
+            <td style="color:#FFB61F">APPROACH</td>
+            <td>Short lines and regionals set their own policy — confirm with the railroad directly.</td>
+            <td><span class="net">600+ carriers</span></td>
+          </tr>
+          <tr>
+            <td style="color:#55607F">DARK</td>
+            <td>No industrial lead, spur, or siding reaches the address. A mainline passing nearby does not count.</td>
+            <td><span class="net">No service</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fineprint">Norfolk Southern is flagged as <em>under review</em>: the announced Union Pacific merger may move it onto the inspection-required list. The tool will say so on any NS result rather than quietly assume an outcome.</p>
+  </section>
+
+  <section class="edge" id="raffle" hidden>
+    <p class="comp-label">Before you go</p>
+    <div class="prize">
+      <span class="prize-b">Win a Nintendo Switch 2</span>
+      <span class="prize-s">One entry per company. We will email the winner when entries close.</span>
+    </div>
+
+    <form id="raffle-form">
+      <div class="form-grid">
+        <div class="fg">
+          <label for="r-name">Name</label>
+          <input id="r-name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="fg">
+          <label for="r-company">Company</label>
+          <input id="r-company" name="company" type="text" autocomplete="organization" required>
+        </div>
+        <div class="fg">
+          <label for="r-email">Email</label>
+          <input id="r-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="fg">
+          <label for="r-phone">Phone</label>
+          <input id="r-phone" name="phone" type="tel" autocomplete="tel" required>
+        </div>
+      </div>
+
+      <!-- Honeypot: bots fill this, people never see it. -->
+      <input type="checkbox" name="botcheck" class="visually-hidden" style="display:none" tabindex="-1" autocomplete="off">
+
+      <div style="display:flex;gap:11px;margin-top:20px;flex-wrap:wrap">
+        <button class="btn" type="submit">Enter the drawing</button>
+      </div>
+    </form>
+    <p class="form-status" id="raffle-status" role="status" aria-live="polite"></p>
+  </section>
+
+  <footer>
+    <span>RAILINSPECTORVERIFY</span>
+    <span>FRA NATIONAL RAIL NETWORK &middot; OPENSTREETMAP (ODbL)</span>
+    <span><a href="docs/STYLE-GUIDE.html">STYLE GUIDE</a></span>
+  </footer>
+
+</div>
+
+<script src="assets/railroads.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
