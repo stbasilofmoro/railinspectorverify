@@ -325,8 +325,41 @@
     return {
       status: status, carrier: carrier, basis: basis,
       nearestIndustrial: nearestInd, nearest: all[0],
-      evidence: all.slice(0, 10), all: all
+      evidence: buildEvidence(all), all: all
     };
+  }
+
+  /* The evidence table exists to justify the verdict, so industrial track
+     leads it. Segments are also collapsed by operator and class, keeping the
+     nearest of each: a single mainline crossing the radius is stored as dozens
+     of separate features, and left alone they fill the table with near-
+     identical rows and push the useful ones out of view. */
+  function evidenceKey(r) {
+    return r.src === 'FRA'
+      ? 'FRA|' + r.mark + '|' + r.net
+      : 'OSM|' + r.operator + '|' + (r.service || r.usage || r.railway);
+  }
+
+  function buildEvidence(all) {
+    var groups = {};
+    var order = [];
+    all.forEach(function (r) {                 // `all` is already distance-sorted,
+      var k = evidenceKey(r);                  // so the first hit is the nearest
+      if (!groups[k]) {
+        groups[k] = r;
+        r.rollup = 1;
+        order.push(k);
+      } else {
+        groups[k].rollup++;
+      }
+    });
+
+    return order.map(function (k) { return groups[k]; })
+      .sort(function (a, b) {
+        if (a.industrial !== b.industrial) return a.industrial ? -1 : 1;
+        return a.distance - b.distance;
+      })
+      .slice(0, 10);
   }
 
   function operatorOf(row) {
@@ -460,8 +493,10 @@
           (r.railway ? ' &mdash; railway=' + esc(r.railway) : '');
         cls = (r.service || r.usage || r.railway || 'rail').toUpperCase();
       }
+      var rollup = r.rollup > 1
+        ? ' <span class="rollup">&times;' + r.rollup + '</span>' : '';
       return '<tr' + (r.industrial ? ' class="is-ind"' : '') + '><td>' + esc(r.src) +
-        '</td><td>' + finding + '</td><td>' + r.distance +
+        '</td><td>' + finding + rollup + '</td><td>' + r.distance +
         ' m</td><td><span class="net">' + esc(cls) + '</span></td></tr>';
     }).join('');
 
@@ -470,7 +505,9 @@
       '<th>Source</th><th>Finding</th><th>Distance</th><th>Class</th>' +
       '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
       '<p class="fineprint">Highlighted rows are industrial track — the kind that ' +
-      'actually serves a facility. Mainline and yard track are listed for context.</p></div>';
+      'actually serves a facility; they are listed first. Mainline and yard track ' +
+      'follow for context. A &times;N badge means that many separate segments of ' +
+      'the same track were collapsed into one row, showing the nearest.</p></div>';
   }
 
   function carrierBlock(carrier, basis) {

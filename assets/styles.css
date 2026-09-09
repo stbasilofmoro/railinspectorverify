@@ -427,3 +427,12 @@ footer a:hover { color: var(--a2); }
   border-radius: 0 var(--r-sm) var(--r-sm) 0;
   padding-top: 9px; padding-bottom: 9px; padding-right: 13px;
 }
+
+/* Collapsed-segment count in the evidence table. */
+.rollup {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+  color: var(--ink-3); background: rgba(255, 255, 255, .06);
+  border: 1px solid var(--line); border-radius: 4px;
+  padding: 1px 5px; margin-left: 6px; white-space: nowrap;
+}
+.ev tr.is-ind .rollup { color: #93F2D2; border-color: rgba(25, 229, 160, .3); }
