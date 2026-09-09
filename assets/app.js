@@ -361,7 +361,11 @@
 
   function ensureMap() {
     if (state.map) return state.map;
-    state.map = L.map(mapEl, { scrollWheelZoom: false });
+    /* A view has to exist before any layer is added. Leaflet cannot project
+       coordinates on a map with no centre or zoom, and adding a circle or
+       polyline to a viewless map throws inside its renderer. Start on the
+       continental US; drawMap moves it to the real point immediately. */
+    state.map = L.map(mapEl, { scrollWheelZoom: false }).setView([39.83, -98.58], 4);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; OpenStreetMap contributors &copy; CARTO &middot; Track: FRA NARN',
       subdomains: 'abcd',
@@ -567,8 +571,14 @@
       drawMap(place, result, fit);
     }).catch(function (err) {
       if (token !== state.seq) return;
-      showMessage('Lookup failed', 'Could not reach the map services: ' +
-        err.message + '. Check your connection and try again.');
+      /* queryFRA and queryOSM swallow their own network failures and return an
+         empty list, so anything arriving here is a fault while rendering, not a
+         connectivity problem. Blaming the network sends people to check their
+         wifi over a bug in this file. */
+      console.error('Failed to render result:', err);
+      showMessage('Could not draw the result',
+        'The rail data came back, but something went wrong displaying it: ' +
+        err.message + '. Try the search again, or reload the page.');
     });
   }
 
